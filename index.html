@@ -946,7 +946,7 @@ async function fotoDe(id){
       if (!r.ok) continue;
       const j = await r.json();
       const src = j.thumbnail && j.thumbnail.source;
-      if (src) return src.replace(/\/(\d+)px-/, "/400px-");
+      if (src) return src;
     } catch { return null; }   // red bloqueada: se quedan las iniciales
   }
   return null;
