@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quiniela Nobel de Literatura 2026 · Perpetuo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800;900&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<style>
+:root{
+  --logo:url("assets/logo.webp");
+  --azul:#074990; --rojo:#e2543b; --lima:#C3D73A; --tinta:#0D1114; --papel:#FAF6F1;
+  --papel-2:#F0E9DE; --papel-3:#E6DDCF;
+  --fondo:var(--azul); --fondo-2:#063d79;
+  --sans:"Hanken Grotesk","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mano:"Nanum Pen Script","Comic Sans MS","Bradley Hand",cursive;
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --fondo:#04305f; --fondo-2:#03264c; }
+}
+:root[data-theme="dark"]{ --fondo:#04305f; --fondo-2:#03264c; }
+html{ scroll-padding-top:env(safe-area-inset-top,0px); }
+*,*::before,*::after{ box-sizing:inherit; }
+html,body{ margin:0; }
+body{
+  background:var(--fondo);
+  color:var(--tinta);
+  font-family:var(--sans);
+  font-size:16px; line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+  min-height:100%;
+  overflow-x:hidden;
+}
+body::before{ /* grano de papel sobre el azul */
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.22; mix-blend-mode:soft-light;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+button,input{ font:inherit; color:inherit; }
+:focus-visible{ outline:3px solid var(--lima); outline-offset:3px; }
+.sr{ position:absolute!important; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+main{ position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:40px 20px 72px; }
+.screen{ display:none; }
+.screen.is-active{ display:block; }
+
+/* ---------------- BOLETA ---------------- */
+.ballot-wrap{ position:relative; }
+.peek{ position:absolute; z-index:0; pointer-events:none; user-select:none; }
+.peek img{ display:block; width:100%; height:auto; }
+.peek--q{ width:92px; top:-58px; right:7%; }
+.peek--c{ width:70px; bottom:-40px; left:-18px; transform:rotate(-14deg); }
+@media (max-width:700px){ .peek--c{ display:none; } .peek--q{ width:70px; top:-46px; } }
+
+.ballot{
+  position:relative; z-index:1;
+  display:grid; grid-template-columns:150px 1fr;
+  background:var(--papel);
+  border-radius:3px;
+  box-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 2px 0 rgba(0,0,0,.08), 0 40px 70px -28px rgba(0,0,0,.55), 0 12px 24px -12px rgba(0,0,0,.3);
+}
+.ballot::after{ /* textura de seguridad */
+  content:""; position:absolute; inset:0; pointer-events:none; border-radius:3px;
+  background-image:var(--guilloche); background-size:180px 60px; opacity:.55;
+}
+.stub{
+  position:relative; padding:22px 18px 22px 20px;
+  border-right:2px dashed rgba(13,17,20,.28);
+  background:var(--papel-2);
+  display:flex; flex-direction:column; gap:18px;
+  border-radius:3px 0 0 3px;
+}
+.stub::after{ /* perforaciones */
+  content:""; position:absolute; top:0; bottom:0; right:-6px; width:10px;
+  background:radial-gradient(circle at 5px 8px, var(--fondo) 3.2px, transparent 3.6px) 0 0/10px 16px repeat-y;
+}
+.stub h2{ margin:0; font-size:13px; font-weight:700; letter-spacing:.01em; }
+.folio{ font-size:30px; font-weight:900; line-height:1; letter-spacing:-.02em; font-variant-numeric:tabular-nums; color:var(--rojo); }
+.stub dl{ margin:0; display:grid; gap:10px; font-size:12px; line-height:1.3; }
+.stub dt{ color:rgba(13,17,20,.55); }
+.stub dd{ margin:0; font-weight:600; }
+.barcode{ margin-top:auto; height:46px; display:flex; align-items:stretch; gap:0; }
+.barcode i{ display:block; background:var(--tinta); }
+.stub-vert{ writing-mode:vertical-rl; transform:rotate(180deg); font-size:11px; color:rgba(13,17,20,.45); letter-spacing:.02em; align-self:flex-start; }
+
+.sheet{ position:relative; z-index:1; padding:28px 32px 30px; min-width:0; }
+.head{ display:grid; grid-template-columns:1fr auto; gap:16px 24px; align-items:start; }
+.logo{
+  display:block; width:min(260px,62%); aspect-ratio:900/153; background:var(--tinta);
+  -webkit-mask:var(--logo) center/contain no-repeat; mask:var(--logo) center/contain no-repeat;
+}
+.kicker{ margin:16px 0 4px; font-size:14px; font-weight:600; color:var(--azul); }
+.title{ margin:0; font-size:clamp(30px,4.6vw,52px); line-height:.98; font-weight:900; letter-spacing:-.035em; max-width:14ch; }
+.premio{
+  display:inline-flex; align-items:center; gap:12px; margin:18px 0 0; padding:10px 16px 10px 12px;
+  background:var(--lima); color:var(--tinta); border-radius:2px; transform:rotate(-1.2deg); transform-origin:left center;
+  font-size:15px; line-height:1.3; font-weight:500; max-width:520px;
+  box-shadow:0 1px 0 rgba(13,17,20,.15), 0 6px 14px -8px rgba(13,17,20,.45);
+}
+.premio svg{ flex:none; width:34px; height:34px; }
+.premio b{ font-weight:800; }
+.owner-only{ display:none; }
+body.is-owner .owner-only{ display:block; }
+.owner-box{ margin:26px auto 0; padding:16px 18px; border:1.5px dashed rgba(250,246,241,.45); border-radius:3px; max-width:440px; }
+.urn-copy .owner-box p{ margin:0 0 14px; font-size:14px; color:rgba(250,246,241,.75); }
+.btn.btn--lima{ background:var(--lima); color:var(--tinta); }
+.seal{ width:118px; height:118px; display:block; }
+.instr{
+  margin:24px 0 18px; display:flex; align-items:center; gap:14px;
+  background:var(--tinta); color:var(--papel); padding:11px 16px; border-radius:2px;
+  font-size:15px; font-weight:600;
+}
+.instr svg{ flex:none; width:26px; height:26px; }
+.instr span{ font-weight:400; opacity:.75; margin-left:auto; font-size:13px; text-align:right; }
+@media (max-width:640px){
+  .instr{ display:grid; grid-template-columns:26px 1fr; gap:4px 12px; }
+  .instr span{ grid-column:2; margin:0; text-align:left; }
+}
+
+
+.grid{ list-style:none; margin:0; padding:0; display:grid; gap:10px; grid-template-columns:repeat(auto-fill,minmax(232px,1fr)); }
+.cand{
+  position:relative; display:grid; grid-template-columns:76px 1fr; align-items:center; gap:14px;
+  padding:10px 12px 10px 10px; min-height:96px;
+  border:1.5px solid var(--tinta); border-radius:2px; background:rgba(250,246,241,.86);
+  cursor:var(--crayon) 3 29, pointer;
+  transition:background-color .2s;
+}
+.cand:hover{ background:#fff; }
+.cand input[type=radio]{ position:absolute; opacity:0; pointer-events:none; }
+.cand:has(input:focus-visible){ outline:3px solid var(--azul); outline-offset:3px; }
+.emblem{
+  position:relative; width:76px; height:76px; border-radius:2px;
+  display:grid; place-items:center;
+  font-weight:900; font-size:27px; letter-spacing:-.04em; line-height:1;
+  color:var(--papel);
+}
+.emblem.c0{ background:var(--azul); }
+.emblem.c1{ background:var(--rojo); }
+.emblem.c2{ background:var(--lima); color:var(--tinta); }
+.emblem.c3{ background:var(--tinta); }
+.emblem.blank{ background:transparent; border:1.5px dashed rgba(13,17,20,.5); }
+.emblem .ini{ position:relative; transition:opacity .4s; }
+.emblem img.foto{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 22%; border-radius:inherit;
+  filter:grayscale(1) contrast(1.15) brightness(1.05); mix-blend-mode:luminosity; opacity:0; transition:opacity .6s; }
+.emblem.has-foto img.foto{ opacity:1; }
+.emblem.has-foto .ini{ opacity:0; }
+.emblem .dot{ z-index:1; text-shadow:0 1px 2px rgba(0,0,0,.25); }
+.emblem .ini.long{ font-size:22px; }
+.emblem .dot{ position:absolute; right:7px; bottom:4px; font-size:22px; line-height:1; opacity:.9; }
+.mark{ position:absolute; inset:-14px; width:calc(100% + 28px); height:calc(100% + 28px); overflow:visible; pointer-events:none; z-index:2; }
+.mark path{ fill:none; stroke:var(--tinta); stroke-linecap:round; stroke-linejoin:round; }
+.name{ min-width:0; }
+.name .n1{ display:block; font-size:14px; font-weight:500; color:rgba(13,17,20,.72); }
+.name .n2{ display:block; font-size:20px; font-weight:800; letter-spacing:-.02em; line-height:1.08; overflow-wrap:anywhere; }
+.name .pais{ display:block; margin-top:5px; font-size:12px; color:rgba(13,17,20,.55); }
+
+.cand.otro{ grid-column:1/-1; grid-template-columns:76px 1fr; }
+.otro .n2{ font-size:16px; }
+.writein{
+  display:block; width:100%; margin-top:6px; border:0; background:transparent; padding:2px 0 0;
+  border-bottom:1.5px solid rgba(13,17,20,.55);
+  font-family:var(--mano); font-size:30px; line-height:1.05; color:var(--tinta);
+  cursor:text;
+}
+.writein::placeholder{ color:rgba(13,17,20,.3); }
+.writein:focus{ outline:none; border-bottom-color:var(--azul); }
+
+.foot{ margin-top:22px; display:grid; grid-template-columns:1fr auto; gap:18px 28px; align-items:end; }
+.fine{ margin:0; font-size:13px; line-height:1.5; color:rgba(13,17,20,.72); max-width:62ch; }
+.fine strong{ color:var(--tinta); font-weight:700; }
+.btn{
+  appearance:none; border:0; border-radius:999px; cursor:pointer;
+  font-weight:800; font-size:18px; letter-spacing:-.01em;
+  padding:16px 34px; background:var(--tinta); color:var(--papel);
+  transition:transform .18s var(--ease-out), background-color .2s, opacity .2s;
+}
+.btn:hover:not(:disabled){ transform:translateY(-2px); }
+.btn:active:not(:disabled){ transform:translateY(1px); }
+.btn:disabled{ opacity:.28; cursor:not-allowed; }
+.btn--ghost{ background:transparent; color:var(--tinta); border:1.5px solid var(--tinta); padding:14px 24px; font-size:16px; }
+.closed-note{ display:none; margin:0 0 14px; padding:12px 14px; border:1.5px solid var(--rojo); color:var(--rojo); font-weight:600; font-size:14px; }
+body.is-closed .closed-note{ display:block; }
+@media (max-width:760px){
+  main{ padding:28px 12px 56px; }
+  .ballot{ grid-template-columns:1fr; }
+  .stub{ border-right:0; border-bottom:2px dashed rgba(13,17,20,.28); flex-direction:row; flex-wrap:wrap; align-items:flex-end; gap:12px 22px; border-radius:3px 3px 0 0; padding:16px 18px 18px; }
+  .stub::after{ top:auto; left:0; right:0; bottom:-6px; width:auto; height:10px; background:radial-gradient(circle at 8px 5px, var(--fondo) 3.2px, transparent 3.6px) 0 0/16px 10px repeat-x; }
+  .stub dl{ grid-template-columns:repeat(3,auto); gap:4px 18px; }
+  .barcode,.stub-vert{ display:none; }
+  .sheet{ padding:22px 18px 22px; }
+  .seal{ width:76px; height:76px; }
+  .foot{ grid-template-columns:1fr; }
+  .foot .btn{ width:100%; }
+}
+
+/* ---------------- REGISTRO ---------------- */
+.form-card{
+  position:relative; max-width:620px; margin:12px auto 0; background:var(--papel); border-radius:3px;
+  padding:34px 34px 30px;
+  box-shadow:0 40px 70px -28px rgba(0,0,0,.55), 0 12px 24px -12px rgba(0,0,0,.3);
+}
+.form-card::before{ content:""; position:absolute; left:0; right:0; top:-6px; height:12px; background:radial-gradient(circle at 8px 6px, var(--fondo) 3.4px, transparent 3.8px) 0 0/16px 12px repeat-x; }
+.form-card h2{ margin:0 0 6px; font-size:clamp(28px,4vw,38px); font-weight:900; letter-spacing:-.035em; line-height:1; }
+.form-card .lead{ margin:0 0 24px; color:rgba(13,17,20,.7); }
+.chosen{ display:flex; align-items:center; gap:14px; padding:12px; border:1.5px solid var(--tinta); border-radius:2px; margin-bottom:26px; }
+.chosen .emblem{ width:56px; height:56px; font-size:20px; }
+.chosen .emblem .ini.long{ font-size:17px; }
+.chosen .mark{ inset:-10px; width:calc(100% + 20px); height:calc(100% + 20px); }
+.chosen small{ display:block; font-size:12px; color:rgba(13,17,20,.55); }
+.chosen b{ font-size:19px; font-weight:800; letter-spacing:-.02em; }
+.field{ display:block; margin-bottom:18px; }
+.field span{ display:block; font-size:14px; font-weight:600; margin-bottom:6px; }
+.field input{
+  width:100%; padding:14px 14px; border:1.5px solid rgba(13,17,20,.5); border-radius:2px; background:#fff;
+  font-size:17px;
+}
+.field input:focus{ outline:none; border-color:var(--azul); box-shadow:0 0 0 3px rgba(7,73,144,.18); }
+.field input[aria-invalid=true]{ border-color:var(--rojo); }
+.consent-row{ display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:center; margin:8px 0 22px; padding:14px; background:var(--papel-2); border-radius:2px; }
+.consent{
+  display:inline-flex; align-items:center; gap:10px; cursor:pointer;
+  border:1.5px solid var(--tinta); background:var(--papel); border-radius:999px; padding:10px 18px 10px 12px;
+  font-weight:800; font-size:15px; transition:background-color .2s, color .2s;
+}
+.consent .box{ width:22px; height:22px; border-radius:50%; border:1.5px solid currentColor; display:grid; place-items:center; flex:none; }
+.consent .box svg{ width:14px; height:14px; opacity:0; transform:scale(.4); transition:opacity .2s, transform .35s var(--ease-out); }
+.consent[aria-pressed=true]{ background:var(--tinta); color:var(--papel); }
+.consent[aria-pressed=true] .box{ background:var(--lima); border-color:var(--lima); color:var(--tinta); }
+.consent[aria-pressed=true] .box svg{ opacity:1; transform:scale(1); }
+.consent-row p{ margin:0; font-size:13.5px; line-height:1.45; color:rgba(13,17,20,.78); }
+@media (max-width:520px){ .consent-row{ grid-template-columns:1fr; } .form-card{ padding:28px 18px 24px; } }
+.err{ min-height:20px; margin:-6px 0 14px; color:var(--rojo); font-size:14px; font-weight:600; }
+.actions{ display:flex; gap:12px; justify-content:space-between; flex-wrap:wrap; }
+.actions .btn{ flex:1 1 auto; }
+
+/* ---------------- URNA ---------------- */
+.stage-fit{ position:relative; width:100%; max-width:640px; margin:0 auto; }
+.stage{ position:absolute; left:0; top:0; width:640px; height:620px; transform-origin:0 0; }
+.urn-wrap{ position:absolute; left:140px; top:220px; width:360px; height:400px; }
+.urn-wrap svg{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+.drop-clip{ position:absolute; left:140px; top:0; width:360px; height:308px; overflow:hidden; pointer-events:none; z-index:3; }
+.packet{ position:absolute; left:105px; top:45px; width:150px; height:210px; opacity:0; }
+.panel{ position:absolute; left:0; width:150px; height:70px; transform-style:preserve-3d; }
+.panel.p1{ top:0; transform-origin:50% 100%; }
+.panel.p2{ top:70px; }
+.panel.p3{ top:140px; transform-origin:50% 0; }
+.face,.back{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; background:var(--papel); }
+.back{ transform:rotateX(180deg); background:var(--papel-3); }
+.p1 .face{ border-radius:2px 2px 0 0; padding:10px 12px; }
+.p1 .face .mini-logo{ width:72px; aspect-ratio:900/153; background:var(--tinta); -webkit-mask:var(--logo) center/contain no-repeat; mask:var(--logo) center/contain no-repeat; }
+.p1 .face i,.p3 .face i{ display:block; height:4px; background:rgba(13,17,20,.14); margin-top:7px; border-radius:2px; }
+.p2 .face{ display:flex; align-items:center; gap:9px; padding:0 10px; border-top:1px solid rgba(13,17,20,.07); border-bottom:1px solid rgba(13,17,20,.07); }
+.p2 .emblem{ width:44px; height:44px; font-size:15px; flex:none; }
+.p2 .emblem .ini.long{ font-size:13px; }
+.p2 .mark{ inset:-8px; width:calc(100% + 16px); height:calc(100% + 16px); }
+.p2 b{ font-size:12px; font-weight:800; line-height:1.1; letter-spacing:-.01em; }
+.p3 .face{ padding:6px 12px; border-radius:0 0 2px 2px; }
+.char{ position:absolute; display:block; height:auto; user-select:none; pointer-events:none; }
+.char--q{ width:84px; left:36px; top:116px; }
+.char--c{ width:66px; left:532px; top:132px; transform:scaleX(-1); }
+.char--p{ width:132px; left:10px; top:494px; }
+.char--e{ width:104px; left:510px; top:474px; }
+.burst{ position:absolute; inset:0; pointer-events:none; z-index:4; }
+.burst span{ position:absolute; left:0; top:0; font-weight:900; line-height:1; will-change:transform,opacity; }
+.urn-copy{ max-width:560px; margin:26px auto 0; text-align:center; color:var(--papel); }
+.urn-copy h2{ margin:0 0 10px; font-size:clamp(32px,5vw,48px); font-weight:900; letter-spacing:-.035em; line-height:1; }
+.urn-copy p{ margin:0 auto; font-size:17px; line-height:1.5; color:rgba(250,246,241,.86); max-width:48ch; }
+.urn-copy p b{ color:var(--papel); }
+.urn-copy .meta{ margin-top:16px; font-size:13px; color:rgba(250,246,241,.6); }
+
+/* ---------------- ACTA (solo dueño) ---------------- */
+.acta-btn{
+  position:fixed; right:16px; bottom:calc(16px + env(safe-area-inset-bottom,0px)); z-index:20;
+  display:none; border:0; border-radius:999px; padding:12px 18px; background:var(--lima); color:var(--tinta);
+  font-weight:800; cursor:pointer; box-shadow:0 10px 24px -8px rgba(0,0,0,.5);
+  align-items:center; gap:8px;
+}
+body.is-owner .acta-btn{ display:inline-flex; }
+dialog.acta{
+  width:min(920px,calc(100vw - 24px)); max-height:calc(100dvh - 40px); border:0; border-radius:3px; padding:0;
+  background:var(--papel); color:var(--tinta); box-shadow:0 40px 90px -20px rgba(0,0,0,.6);
+}
+dialog.acta::backdrop{ background:rgba(4,30,60,.6); }
+.acta-in{ padding:28px 30px 30px; }
+.acta-top{ display:flex; gap:16px; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; }
+.acta h2{ margin:0; font-size:30px; font-weight:900; letter-spacing:-.03em; line-height:1.05; }
+.acta .sub{ margin:4px 0 0; color:rgba(13,17,20,.65); font-size:14px; }
+.acta-tools{ display:flex; gap:10px; flex-wrap:wrap; }
+.acta-tools .btn{ font-size:14px; padding:10px 16px; }
+.tally{ list-style:none; margin:24px 0; padding:0; display:grid; gap:8px; }
+.tally li{ display:grid; grid-template-columns:minmax(120px,220px) 1fr 44px; gap:12px; align-items:center; font-size:14px; }
+.tally .bar{ height:14px; background:var(--papel-3); border-radius:2px; overflow:hidden; }
+.tally .bar i{ display:block; height:100%; background:var(--azul); }
+.tally b{ text-align:right; font-variant-numeric:tabular-nums; }
+.winner-row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; padding:14px; background:var(--papel-2); border-radius:2px; font-size:14px; }
+.winner-row select{ font:inherit; padding:8px 10px; border:1.5px solid var(--tinta); border-radius:2px; background:#fff; }
+.winners{ margin:10px 0 0; font-size:14px; }
+.table-scroll{ overflow-x:auto; margin-top:18px; border:1.5px solid var(--tinta); border-radius:2px; }
+.acta table{ border-collapse:collapse; width:100%; font-size:13.5px; min-width:640px; }
+.acta th,.acta td{ text-align:left; padding:9px 12px; border-bottom:1px solid rgba(13,17,20,.12); white-space:nowrap; }
+.acta th{ background:var(--tinta); color:var(--papel); font-weight:700; }
+.acta tr.win td{ background:rgba(195,215,58,.45); font-weight:700; }
+.empty{ padding:22px; text-align:center; color:rgba(13,17,20,.6); }
+
+@media (max-width:520px){
+  .grid{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .cand{ grid-template-columns:1fr; align-items:start; gap:10px; padding:10px; min-height:0; }
+  .emblem{ width:60px; height:60px; font-size:22px; }
+  .emblem .ini.long{ font-size:18px; }
+  .mark{ inset:-11px; width:calc(100% + 22px); height:calc(100% + 22px); }
+  .name .n1{ font-size:13px; }
+  .name .n2{ font-size:17px; }
+  .cand.otro{ grid-template-columns:60px 1fr; align-items:center; }
+}
+@media (prefers-reduced-motion: reduce){
+  *{ transition:none!important; animation:none!important; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="crayon" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4.5" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="1" seed="11" result="g"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -2.6 0 0 0 2.15" result="m"/>
+      <feComposite in="d" in2="m" operator="in"/>
+    </filter>
+  </defs>
+</svg>
+
+<main>
+  <!-- 1. BOLETA -->
+  <section id="s-boleta" class="screen is-active" aria-labelledby="t-boleta">
+    <div class="ballot-wrap">
+      <div class="peek peek--q" id="peekQ"><img alt="" src="assets/interrogacion.webp"></div>
+      <div class="peek peek--c" id="peekC"><img alt="" src="assets/coma.webp"></div>
+      <article class="ballot" id="ballot">
+        <aside class="stub" aria-label="Talón">
+          <div>
+            <h2>Talón foliado</h2>
+            <div class="folio" id="folio">000000</div>
+          </div>
+          <dl>
+            <div><dt>Entidad</dt><dd>Estocolmo</dd></div>
+            <div><dt>Distrito</dt><dd>Academia Sueca</dd></div>
+            <div><dt>Sección</dt><dd>Silla 18</dd></div>
+          </dl>
+          <div class="barcode" id="barcode" aria-hidden="true"></div>
+          <div class="stub-vert" aria-hidden="true">Perpetuo · perpetuo.global</div>
+        </aside>
+
+        <div class="sheet">
+          <header class="head">
+            <div>
+              <span class="logo" role="img" aria-label="Perpetuo"></span>
+              <p class="kicker">Boleta para la quiniela de Perpetuo</p>
+              <h1 class="title" id="t-boleta">Premio Nobel de Literatura 2026</h1>
+              <p class="premio">
+                <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M4 8 Q11 5 17 9 Q23 5 30 8 L30 27 Q23 24 17 28 Q11 24 4 27 Z" fill="#FAF6F1" stroke="#0D1114" stroke-width="2" stroke-linejoin="round"/><path d="M17 9 L17 28" stroke="#0D1114" stroke-width="2"/><path d="M8 13 Q11 12 14 13 M8 17 Q11 16 14 17 M20 13 Q23 12 26 13 M20 17 Q23 16 26 17" stroke="#0D1114" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>
+                <span><b>Premio:</b> las tres primeras personas que acierten reciben un libro de quien gane el Nobel.</span>
+              </p>
+            </div>
+            <svg class="seal" id="seal" viewBox="0 0 120 120" aria-hidden="true"></svg>
+          </header>
+
+          <div class="instr">
+            <svg viewBox="0 0 26 26" aria-hidden="true"><rect x="1" y="1" width="24" height="24" fill="none" stroke="#FAF6F1" stroke-width="1.5"/><path d="M6 6 L20 20 M20 6 L6 20" stroke="#C3D73A" stroke-width="3" stroke-linecap="round"/></svg>
+            Marca con una X el recuadro de quien crees que ganará
+            <span>Una sola marca. Un solo voto por persona.</span>
+          </div>
+
+          <p class="closed-note" id="closedNote">La votación cerró. La Academia Sueca ya está por anunciar al ganador.</p>
+
+          <fieldset style="border:0;margin:0;padding:0;min-width:0">
+            <legend class="sr">Candidatos al Premio Nobel de Literatura 2026</legend>
+            <ul class="grid" id="grid" role="list"></ul>
+          </fieldset>
+
+          <div class="foot">
+            <p class="fine">
+              La votación cierra el <strong>jueves 8 de octubre a las 5:00 h</strong> (Ciudad de México), antes del anuncio en Estocolmo.
+              Candidaturas en orden alfabético. Fotografías: Wikipedia y Wikimedia Commons.
+            </p>
+            <button class="btn" id="btnVotar" type="button" disabled>Votar</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 2. REGISTRO -->
+  <section id="s-registro" class="screen" aria-labelledby="t-registro">
+    <form class="form-card" id="form" novalidate>
+      <h2 id="t-registro">Antes de depositar tu voto</h2>
+      <p class="lead">Si aciertas, así te encontramos para enviarte tu libro.</p>
+      <div class="chosen" id="chosen"></div>
+      <label class="field"><span>Nombre completo</span><input id="fNombre" name="nombre" autocomplete="name" required></label>
+      <label class="field"><span>Correo electrónico</span><input id="fCorreo" name="correo" type="email" autocomplete="email" inputmode="email" required></label>
+      <div class="consent-row">
+        <button type="button" class="consent" id="btnConsent" aria-pressed="false" aria-describedby="consentTxt">
+          <span class="box"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5 L5.8 10.5 L11.5 3.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          Consentimiento
+        </button>
+        <p id="consentTxt">Confirmo que ya estoy suscrito a Perpetuo o acepto que me suscriban al enviar este formulario.</p>
+      </div>
+      <p class="err" id="err" role="alert"></p>
+      <div class="actions">
+        <button type="button" class="btn btn--ghost" id="btnVolver">Cambiar mi voto</button>
+        <button type="submit" class="btn" id="btnDepositar">Depositar voto</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- 3. URNA -->
+  <section id="s-urna" class="screen" aria-labelledby="t-urna">
+    <div class="stage-fit" id="stageFit">
+      <div class="stage" id="stage">
+        <img class="char char--q" id="chQ" alt="" src="assets/interrogacion.webp">
+        <img class="char char--c" id="chC" alt="" src="assets/coma.webp">
+        <div class="urn-wrap" id="urnBack">
+          <svg viewBox="0 0 360 400" aria-hidden="true">
+            <path d="M52 72 L308 72 L338 108 L338 388 L22 388 L22 108 Z" fill="#E6DDCF"/>
+            <path d="M52 72 L52 360 M308 72 L308 360" stroke="#0D1114" stroke-width="2" opacity=".18"/>
+            <g id="pile">
+              <rect x="86" y="338" width="92" height="30" rx="2" fill="#FAF6F1" stroke="#0D1114" stroke-width="2" transform="rotate(-7 132 353)"/>
+              <rect x="170" y="342" width="92" height="30" rx="2" fill="#FAF6F1" stroke="#0D1114" stroke-width="2" transform="rotate(5 216 357)"/>
+              <rect x="120" y="318" width="92" height="30" rx="2" fill="#FAF6F1" stroke="#0D1114" stroke-width="2" transform="rotate(12 166 333)"/>
+              <rect x="210" y="320" width="80" height="28" rx="2" fill="#FAF6F1" stroke="#0D1114" stroke-width="2" transform="rotate(-10 250 334)"/>
+            </g>
+            <g id="newPaper" opacity="0">
+              <rect x="136" y="0" width="92" height="30" rx="2" fill="#FAF6F1" stroke="#0D1114" stroke-width="2"/>
+              <rect x="146" y="10" width="20" height="12" fill="#e2543b"/>
+            </g>
+          </svg>
+        </div>
+        <div class="drop-clip">
+          <div class="packet" id="packet">
+            <div class="panel p1" id="p1"><div class="face"><div class="mini-logo"></div><i style="width:80%"></i><i style="width:55%"></i></div><div class="back"></div></div>
+            <div class="panel p2" id="p2"><div class="face" id="p2face"></div></div>
+            <div class="panel p3" id="p3"><div class="face"><i style="width:90%"></i><i style="width:70%"></i><i style="width:40%"></i></div><div class="back"></div></div>
+          </div>
+        </div>
+        <div class="urn-wrap" id="urnFront" style="z-index:3">
+          <svg viewBox="0 0 360 400" aria-hidden="true">
+            <!-- tapa -->
+            <path d="M52 72 L308 72 L338 108 L22 108 Z" fill="#FAF6F1" stroke="#0D1114" stroke-width="5" stroke-linejoin="round"/>
+            <rect id="slot" x="100" y="84" width="160" height="10" rx="5" fill="#0D1114"/>
+            <!-- cuerpo translúcido -->
+            <path d="M22 108 L338 108 L338 384 Q338 392 330 392 L30 392 Q22 392 22 384 Z" fill="rgba(250,246,241,.42)" stroke="#0D1114" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M44 126 L44 372" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".55"/>
+            <path d="M62 126 L62 210" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".45"/>
+            <!-- etiqueta -->
+            <rect x="70" y="150" width="220" height="92" rx="3" fill="#074990"/>
+            <foreignObject x="70" y="150" width="220" height="92">
+              <div xmlns="http://www.w3.org/1999/xhtml" style="height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px">
+                <div style="width:150px;aspect-ratio:900/153;background:#FAF6F1;-webkit-mask:var(--logo) center/contain no-repeat;mask:var(--logo) center/contain no-repeat"></div>
+                <div style="font:700 13px var(--sans);color:#FAF6F1;letter-spacing:.01em">Nobel de Literatura 2026</div>
+              </div>
+            </foreignObject>
+          </svg>
+        </div>
+        <img class="char char--p" id="chP" alt="" src="assets/punto.webp" style="z-index:5">
+        <img class="char char--e" id="chE" alt="" src="assets/exclamacion.webp" style="z-index:5">
+        <div class="burst" id="burst"></div>
+      </div>
+    </div>
+    <div class="urn-copy" aria-live="polite">
+      <h2 id="t-urna">Tu voto está en la urna.</h2>
+      <p id="urnTxt"></p>
+      <p class="meta" id="urnMeta"></p>
+    </div>
+  </section>
+</main>
+
+<dialog class="acta" id="acta" aria-labelledby="t-acta">
+  <div class="acta-in">
+    <div class="acta-top">
+      <div>
+        <h2 id="t-acta">Acta de escrutinio y cómputo</h2>
+        <p class="sub" id="actaSub">Cargando votos…</p>
+        <p class="sub">Privada: solo la cuenta dueña de esta boleta puede abrirla y leer los votos.</p>
+      </div>
+      <div class="acta-tools">
+        <button class="btn btn--ghost" id="btnCsv" type="button">Descargar CSV</button>
+        <button class="btn" id="btnCerrarActa" type="button">Cerrar</button>
+      </div>
+    </div>
+    <ul class="tally" id="tally"></ul>
+    <div class="winner-row">
+      <label for="selWinner"><b>Ganador anunciado:</b></label>
+      <select id="selWinner"><option value="">Selecciona tras el anuncio</option></select>
+      <span>Resalta a las tres primeras personas que acertaron.</span>
+    </div>
+    <p class="winners" id="winners"></p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Orden</th><th>Fecha y hora</th><th>Nombre</th><th>Correo</th><th>Voto</th><th>Folio</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+/* ============ CONFIGURACIÓN ============ */
+const CONFIG = {
+  // Si alojas esta página en perpetuo.global, pega aquí la URL de un webhook (n8n)
+  // para guardar los votos. Dentro de claude.ai los votos se guardan en la base del artifact.
+  WEBHOOK_URL: "https://esperpetuo.app.n8n.cloud/webhook/quiniela-nobel-2026",
+  CIERRE: "2026-10-08T11:00:00Z",       // 5:00 h Ciudad de México, antes del anuncio
+  CLAVE_LOCAL: "perpetuo-nobel-2026"
+};
+const CANDIDATOS = [
+  {id:"aira",         n1:"César",    n2:"Aira",         pais:"Argentina",      ini:"CA"},
+  {id:"atwood",       n1:"Margaret", n2:"Atwood",       pais:"Canadá",         ini:"MA"},
+  {id:"can-xue",      n1:"",         n2:"Can Xue",      pais:"China",          ini:"CX"},
+  {id:"carson",       n1:"Anne",     n2:"Carson",       pais:"Canadá",         ini:"AC"},
+  {id:"cartarescu",   n1:"Mircea",   n2:"Cărtărescu",   pais:"Rumania",        ini:"MC"},
+  {id:"ghosh",        n1:"Amitav",   n2:"Ghosh",        pais:"India",          ini:"AG"},
+  {id:"murakami",     n1:"Haruki",   n2:"Murakami",     pais:"Japón",          ini:"HM"},
+  {id:"murnane",      n1:"Gerald",   n2:"Murnane",      pais:"Australia",      ini:"GM"},
+  {id:"pynchon",      n1:"Thomas",   n2:"Pynchon",      pais:"Estados Unidos", ini:"TP"},
+  {id:"rivera-garza", n1:"Cristina", n2:"Rivera Garza", pais:"México",         ini:"CRG"},
+  {id:"rushdie",      n1:"Salman",   n2:"Rushdie",      pais:"Reino Unido",    ini:"SR"},
+  {id:"wright",       n1:"Alexis",   n2:"Wright",       pais:"Australia",      ini:"AW"}
+];
+const SIGNOS = [".", ",", "!", "?"];
+const WIKI = {
+  "aira":"César_Aira", "atwood":"Margaret_Atwood", "can-xue":"Can_Xue", "carson":"Anne_Carson",
+  "cartarescu":"Mircea_Cărtărescu", "ghosh":"Amitav_Ghosh", "murakami":"Haruki_Murakami", "murnane":"Gerald_Murnane",
+  "pynchon":"Thomas_Pynchon", "rivera-garza":"Cristina_Rivera_Garza", "rushdie":"Salman_Rushdie", "wright":"Alexis_Wright"
+};
+const FOTOS = {};
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const nombreCompleto = c => (c.n1 ? c.n1 + " " : "") + c.n2;
+const ls = {
+  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch {} }
+};
+
+/* ============ RUNTIME (db de claude.ai) ============ */
+const runtime = (async () => {
+  const out = { db:null, user:null, downloads:null, uid:null };
+  if (!window.claude || typeof window.claude.use !== "function") return out;
+  const safe = p => Promise.resolve(p).catch(() => null);
+  [out.db, out.user, out.downloads] = await Promise.all([safe(claude.use("db")), safe(claude.use("user")), safe(claude.use("downloads"))]);
+  if (out.user) { try { out.uid = await out.user.id(); } catch {} }
+  return out;
+})();
+
+/* ============ DECORACIÓN: guilloche, sello, código de barras, folio ============ */
+(function decor(){
+  // fondo de seguridad
+  let d = "";
+  for (let k = 0; k < 4; k++) {
+    let p = `M0 ${12 + k*12}`;
+    for (let x = 0; x <= 180; x += 6) p += ` L${x} ${(12 + k*12 + Math.sin((x/180)*Math.PI*4 + k) * 4).toFixed(2)}`;
+    d += `<path d='${p}' fill='none' stroke='%23074990' stroke-opacity='.07' stroke-width='.7'/>`;
+  }
+  document.documentElement.style.setProperty("--guilloche", `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='60'%3E${d.replace(/</g,"%3C").replace(/>/g,"%3E")}%3C/svg%3E")`);
+  // sello en roseta
+  const seal = $("#seal"); let s = "";
+  const ros = (R, a, n, ph, col, op) => {
+    let p = "";
+    for (let i = 0; i <= 360; i++) {
+      const t = i * Math.PI / 180, r = R + a * Math.sin(n * t + ph);
+      p += (i ? "L" : "M") + (60 + r * Math.cos(t)).toFixed(2) + " " + (60 + r * Math.sin(t)).toFixed(2);
+    }
+    return `<path d="${p}Z" fill="none" stroke="${col}" stroke-opacity="${op}" stroke-width=".9"/>`;
+  };
+  for (let k = 0; k < 9; k++) s += ros(44 - k*1.6, 9, 14, k*0.38, "#074990", .55);
+  for (let k = 0; k < 6; k++) s += ros(30 - k*1.4, 5, 9, k*0.5, "#C3D73A", 1);
+  s += `<circle cx="60" cy="60" r="17" fill="#FAF6F1"/><text x="60" y="65" text-anchor="middle" font-family="Hanken Grotesk, sans-serif" font-weight="900" font-size="14" fill="#0D1114">2026</text>`;
+  seal.innerHTML = s;
+  // código de barras
+  const bc = $("#barcode"); let h = "";
+  for (let i = 0; i < 34; i++) h += `<i style="width:${[1,1,2,3,1,2][Math.floor(Math.random()*6)]}px;margin-right:${[1,2,1,3][Math.floor(Math.random()*4)]}px"></i>`;
+  bc.innerHTML = h;
+  // folio persistente
+  let folio = ls.get(CONFIG.CLAVE_LOCAL + "-folio");
+  if (!folio) { folio = String(Math.floor(100000 + Math.random()*899999)); ls.set(CONFIG.CLAVE_LOCAL + "-folio", folio); }
+  $("#folio").textContent = folio;
+  // cursor de crayón
+  const cur = `<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><g transform='rotate(40 16 16)'><rect x='12' y='-2' width='9' height='22' rx='2' fill='%23074990' stroke='%230D1114' stroke-width='1.5'/><path d='M12 20 L21 20 L16.5 30 Z' fill='%230D1114'/></g></svg>`;
+  document.documentElement.style.setProperty("--crayon", `url("data:image/svg+xml,${cur.replace(/</g,"%3C").replace(/>/g,"%3E").replace(/#/g,"%23")}")`);
+})();
+
+/* ============ BOLETA ============ */
+const grid = $("#grid");
+const state = { sel:null, otro:"" };
+
+function emblemHTML(c, idx){
+  if (!c) return `<span class="emblem blank"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"></svg></span>`;
+  const long = c.ini.length > 2 ? " long" : "";
+  const f = FOTOS[c.id];
+  return `<span class="emblem c${idx % 4}${f ? " has-foto" : ""}" data-foto="${c.id}">${f ? `<img class="foto" alt="" src="${esc(f)}">` : ""}<span class="ini${long}">${c.ini}</span><span class="dot" aria-hidden="true">${SIGNOS[idx % 4]}</span><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"></svg></span>`;
+}
+grid.innerHTML = CANDIDATOS.map((c, i) => `
+  <li><label class="cand" data-id="${c.id}">
+    <input type="radio" name="voto" value="${c.id}" aria-label="${esc(nombreCompleto(c))}, ${esc(c.pais)}">
+    ${emblemHTML(c, i)}
+    <span class="name">${c.n1 ? `<span class="n1">${c.n1}</span>` : ""}<span class="n2">${c.n2}</span><span class="pais">${c.pais}</span></span>
+  </label></li>`).join("") + `
+  <li style="grid-column:1/-1"><label class="cand otro" data-id="otro">
+    <input type="radio" name="voto" value="otro" aria-label="Candidato no registrado">
+    ${emblemHTML(null)}
+    <span class="name"><span class="n2">Candidato no registrado</span>
+      <input class="writein" id="writein" type="text" maxlength="80" placeholder="Escribe aquí el nombre" aria-label="Nombre del candidato no registrado" autocomplete="off">
+    </span>
+  </label></li>`;
+
+function crayonX(svg, opts = {}){
+  const { speed = 1, instant = reduce } = opts;
+  svg.innerHTML = "";
+  const NS = "http://www.w3.org/2000/svg";
+  const g = document.createElementNS(NS, "g");
+  g.setAttribute("filter", "url(#crayon)");
+  svg.appendChild(g);
+  const j = (n = 8) => (Math.random() - .5) * n;
+  const strokes = [
+    `M ${4+j()} ${6+j()} Q ${52+j(14)} ${44+j(14)} ${95+j()} ${93+j()} l ${3+j(3)} ${-6+j(3)}`,
+    `M ${93+j()} ${4+j()} C ${70+j(10)} ${34+j(10)} ${38+j(10)} ${62+j(10)} ${6+j()} ${96+j()}`
+  ];
+  const timings = [{d:210, delay:0}, {d:240, delay:300}];
+  strokes.forEach((dPath, i) => {
+    [[11, 1, 0], [6, .55, 1.6]].forEach(([w, op, off]) => {
+      const p = document.createElementNS(NS, "path");
+      p.setAttribute("d", dPath);
+      p.setAttribute("stroke-width", w);
+      p.setAttribute("opacity", op);
+      if (off) p.setAttribute("transform", `translate(${off} ${-off})`);
+      g.appendChild(p);
+      const len = p.getTotalLength();
+      p.style.strokeDasharray = len;
+      if (instant) { p.style.strokeDashoffset = 0; return; }
+      p.style.strokeDashoffset = len;
+      p.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }],
+        { duration: timings[i].d / speed, delay: timings[i].delay / speed, easing: "cubic-bezier(.55,0,.25,1)", fill: "forwards" });
+    });
+  });
+  return g;
+}
+function eraseX(svg){
+  const g = svg.querySelector("g"); if (!g) return;
+  if (reduce) { svg.innerHTML = ""; return; }
+  g.animate([{ opacity:1, transform:"translate(0,0)" }, { opacity:0, transform:"translate(2px,-2px)" }], { duration:220, easing:"ease-in", fill:"forwards" })
+    .onfinish = () => { if (svg.querySelector("g") === g) svg.innerHTML = ""; };
+}
+
+function seleccionar(id){
+  if (document.body.classList.contains("is-closed")) return;
+  if (state.sel === id) return;
+  if (state.sel) eraseX(grid.querySelector(`[data-id="${state.sel}"] .mark`));
+  state.sel = id;
+  const cell = grid.querySelector(`[data-id="${id}"]`);
+  cell.querySelector("input[type=radio]").checked = true;
+  crayonX(cell.querySelector(".mark"));
+  if (id === "otro" && !writein.value.trim()) setTimeout(() => writein.focus({ preventScroll:true }), 0);
+  if (!reduce) cell.querySelector(".emblem").animate(
+    [{ transform:"scale(1)" }, { transform:"scale(.95) rotate(-1deg)" }, { transform:"scale(1)" }],
+    { duration:320, easing:"cubic-bezier(.3,1.6,.5,1)" });
+  actualizarBoton();
+}
+function actualizarBoton(){
+  const ok = state.sel && (state.sel !== "otro" || $("#writein").value.trim().length > 1);
+  $("#btnVotar").disabled = !ok || document.body.classList.contains("is-closed");
+}
+grid.addEventListener("change", e => { if (e.target.name === "voto") seleccionar(e.target.value); });
+const writein = $("#writein");
+writein.addEventListener("input", () => { if (writein.value.trim() && state.sel !== "otro") seleccionar("otro"); actualizarBoton(); });
+writein.addEventListener("click", e => e.stopPropagation());
+
+function eleccion(){
+  if (!state.sel) return null;
+  if (state.sel === "otro") { const t = writein.value.trim(); return { id:"otro", nombre:t, otro:t, idx:-1 }; }
+  const i = CANDIDATOS.findIndex(c => c.id === state.sel);
+  return { id:state.sel, nombre:nombreCompleto(CANDIDATOS[i]), otro:"", idx:i };
+}
+function emblemFor(e){ return e.idx >= 0 ? emblemHTML(CANDIDATOS[e.idx], e.idx) : emblemHTML(null); }
+
+/* ============ NAVEGACIÓN ============ */
+async function ir(destino){
+  const actual = $(".screen.is-active");
+  const sig = $(destino);
+  if (actual === sig) return;
+  if (actual && !reduce) await actual.animate([{ opacity:1, transform:"none" }, { opacity:0, transform:"translateY(-18px) scale(.985)" }], { duration:260, easing:"ease-in", fill:"forwards" }).finished;
+  if (actual) { actual.classList.remove("is-active"); actual.getAnimations().forEach(a => a.cancel()); }
+  sig.classList.add("is-active");
+  window.scrollTo({ top:0, behavior: reduce ? "auto" : "smooth" });
+  if (!reduce) sig.animate([{ opacity:0, transform:"translateY(22px)" }, { opacity:1, transform:"none" }], { duration:520, easing:"cubic-bezier(.16,1,.3,1)" });
+}
+
+$("#btnVotar").addEventListener("click", () => {
+  const e = eleccion(); if (!e) return;
+  const ch = $("#chosen");
+  ch.innerHTML = `${emblemFor(e)}<div><small>Tu voto</small><b>${esc(e.nombre)}</b></div>`;
+  ir("#s-registro").then(() => { crayonX(ch.querySelector(".mark"), { instant:true }); $("#fNombre").focus({ preventScroll:true }); });
+});
+$("#btnVolver").addEventListener("click", () => ir("#s-boleta"));
+const btnConsent = $("#btnConsent");
+btnConsent.addEventListener("click", () => {
+  const on = btnConsent.getAttribute("aria-pressed") !== "true";
+  btnConsent.setAttribute("aria-pressed", String(on));
+  if (on && !reduce) btnConsent.animate([{ transform:"scale(.94)" }, { transform:"scale(1.04)" }, { transform:"scale(1)" }], { duration:360, easing:"cubic-bezier(.3,1.6,.5,1)" });
+  if (on && $("#err").dataset.k === "consent") $("#err").textContent = "";
+});
+
+/* ============ GUARDADO ============ */
+async function yaVoto(){
+  const rt = await runtime;
+  if (rt.db && rt.uid) {
+    try { const s = await rt.db.doc("votos/" + rt.uid).get(); if (s.exists) return s.data(); } catch {}
+  }
+  const loc = ls.get(CONFIG.CLAVE_LOCAL + "-voto");
+  if (loc) { try { return JSON.parse(loc); } catch {} }
+  return null;
+}
+async function guardar(reg){
+  const rt = await runtime;
+  if (rt.db && rt.uid) {
+    const ref = rt.db.doc("votos/" + rt.uid);
+    const prev = await ref.get().catch(() => null);
+    if (prev && prev.exists) return { ya: prev.data() };
+    try { await ref.set({ ...reg, uid: rt.uid }); }
+    catch (e) {
+      if (e && e.code === "unavailable") { await new Promise(r => setTimeout(r, 600 + Math.random()*600)); await ref.set({ ...reg, uid: rt.uid }); }
+      else throw e;
+    }
+    return { ok:true };
+  }
+  if (CONFIG.WEBHOOK_URL) {
+    const r = await fetch(CONFIG.WEBHOOK_URL, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(reg) });
+    if (r.status === 409) { const j = await r.json().catch(() => null); return { ya: (j && j.candidato) ? j : reg }; }
+    if (r.status === 410) throw { code:"cerrada" };
+    if (!r.ok) throw { code:"webhook" };
+    return { ok:true };
+  }
+  throw { code:"sin_destino" };
+}
+
+$("#form").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const err = $("#err"), nom = $("#fNombre"), cor = $("#fCorreo");
+  const nombre = nom.value.trim(), correo = cor.value.trim();
+  [nom, cor].forEach(i => i.removeAttribute("aria-invalid"));
+  const fail = (msg, el, k) => { err.textContent = msg; err.dataset.k = k || ""; if (el) { el.setAttribute("aria-invalid", "true"); el.focus(); } };
+  if (nombre.length < 2) return fail("Escribe tu nombre.", nom);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(correo)) return fail("Escribe un correo válido, como nombre@dominio.com.", cor);
+  if (btnConsent.getAttribute("aria-pressed") !== "true") { fail("Activa Consentimiento para depositar tu voto.", null, "consent"); btnConsent.focus(); return; }
+  if (Date.now() > Date.parse(CONFIG.CIERRE)) return fail("La votación ya cerró.");
+  const e = eleccion();
+  const reg = {
+    candidatoId: e.id, candidato: e.nombre, otro: e.otro,
+    nombre, correo: correo.toLowerCase(), consentimiento: true,
+    folio: $("#folio").textContent, fecha: new Date().toISOString()
+  };
+  const btn = $("#btnDepositar"); btn.disabled = true; btn.textContent = "Depositando…"; err.textContent = "";
+  try {
+    const res = await guardar(reg);
+    ls.set(CONFIG.CLAVE_LOCAL + "-voto", JSON.stringify(res.ya || reg));
+    if (res.ya) { await ir("#s-urna"); mostrarUrna(res.ya, false); }
+    else { await ir("#s-urna"); mostrarUrna(reg, true, e); }
+  } catch (x) {
+    btn.disabled = false; btn.textContent = "Depositar voto";
+    if (x && x.code === "invalid_argument") fail("Esta boleta no acepta tu voto con el acceso que tienes. Pide a Perpetuo el enlace para participar.");
+    else if (x && x.code === "cerrada") fail("La votación ya cerró.");
+    else if (x && x.code === "sin_destino") fail("Esta copia de la boleta no tiene dónde guardar votos. Pide a Perpetuo el enlace oficial.");
+    else fail("No pudimos guardar tu voto. Revisa tu conexión y vuelve a intentarlo.");
+  }
+});
+
+/* ============ URNA ============ */
+function fitStage(){
+  const fit = $("#stageFit"), st = $("#stage");
+  const s = Math.min(1, fit.clientWidth / 640);
+  st.style.transform = `scale(${s})`;
+  fit.style.height = (620 * s) + "px";
+}
+addEventListener("resize", fitStage);
+
+function textoUrna(reg, nuevo){
+  $("#t-urna").textContent = nuevo ? "Tu voto está en la urna." : "Ya votaste.";
+  $("#urnTxt").innerHTML = `Votaste por <b>${esc(reg.candidato)}</b>. La Academia Sueca anuncia a quien gana el jueves 8 de octubre. Si aciertas y estás entre las tres primeras personas en votar por esa persona, te escribimos a <b>${esc(reg.correo || "tu correo")}</b> para enviarte un libro suyo.`;
+  $("#urnMeta").textContent = reg.folio ? `Folio ${reg.folio}` : "";
+}
+
+function mostrarUrna(reg, animar, e){
+  fitStage();
+  textoUrna(reg, animar);
+  const copy = $(".urn-copy");
+  if (!animar || reduce) {
+    $("#newPaper").setAttribute("opacity", "1");
+    $("#newPaper").setAttribute("transform", "translate(-6 318) rotate(-4 182 15)");
+    return;
+  }
+  copy.style.opacity = 0;
+  const emb = e || { idx: CANDIDATOS.findIndex(c => c.id === reg.candidatoId), nombre: reg.candidato };
+  $("#p2face").innerHTML = `${emblemFor(emb)}<b>${esc(reg.candidato)}</b>`;
+  crayonX($("#p2face .mark"), { instant:true });
+  secuenciaDeposito().then(() => {
+    copy.animate([{ opacity:0, transform:"translateY(14px)" }, { opacity:1, transform:"none" }], { duration:600, easing:"cubic-bezier(.16,1,.3,1)", fill:"forwards" });
+  });
+}
+
+const wait = ms => new Promise(r => setTimeout(r, ms));
+async function secuenciaDeposito(){
+  const packet = $("#packet"), p1 = $("#p1"), p3 = $("#p3");
+  const chars = ["#chQ","#chC","#chP","#chE"].map(s => $(s));
+  // personajes entran
+  chars.forEach((c, i) => c.animate([{ opacity:0, transform:(c.id==="chC"?"scaleX(-1) ":"") + "translateY(30px)" }, { opacity:1, transform:(c.id==="chC"?"scaleX(-1) ":"") + "translateY(0)" }],
+    { duration:600, delay:100 + i*90, easing:"cubic-bezier(.2,1.4,.4,1)", fill:"backwards" }));
+  // la boleta aparece abierta
+  await packet.animate([
+    { opacity:0, transform:"translateY(40px) rotate(-8deg) scale(.8)" },
+    { opacity:1, transform:"translateY(0) rotate(-2deg) scale(1)" }
+  ], { duration:620, easing:"cubic-bezier(.16,1,.3,1)", fill:"forwards" }).finished;
+  await wait(220);
+  // doblez inferior hacia arriba
+  await p3.animate([{ transform:"perspective(700px) rotateX(0deg)" }, { transform:"perspective(700px) rotateX(178deg)" }],
+    { duration:520, easing:"cubic-bezier(.65,0,.35,1)", fill:"forwards" }).finished;
+  p1.style.zIndex = 3;
+  // doblez superior hacia abajo
+  await p1.animate([{ transform:"perspective(700px) rotateX(0deg)" }, { transform:"perspective(700px) rotateX(-176deg)" }],
+    { duration:520, easing:"cubic-bezier(.65,0,.35,1)", fill:"forwards" }).finished;
+  // se acomoda sobre la ranura y cae
+  const drop = packet.animate([
+    { transform:"translateY(0) rotate(-2deg)", offset:0 },
+    { transform:"translateY(-26px) rotate(0deg) scaleY(1)", offset:.35, easing:"cubic-bezier(.3,0,.7,1)" },
+    { transform:"translateY(-14px) rotate(0deg) scaleY(.55)", offset:.55, easing:"cubic-bezier(.6,0,.9,.6)" },
+    { transform:"translateY(240px) rotate(0deg) scaleY(.45)", offset:1 }
+  ], { duration:900, fill:"forwards" });
+  await drop.finished;
+  // la urna recibe
+  $("#urnFront").animate([{ transform:"rotate(0)" }, { transform:"rotate(-1.4deg)" }, { transform:"rotate(1deg)" }, { transform:"rotate(0)" }], { duration:420, easing:"ease-out" });
+  $("#urnBack").animate([{ transform:"rotate(0)" }, { transform:"rotate(-1.4deg)" }, { transform:"rotate(1deg)" }, { transform:"rotate(0)" }], { duration:420, easing:"ease-out" });
+  const np = $("#newPaper");
+  np.setAttribute("opacity", "1");
+  np.animate([
+    { transform:"translate(0px,100px) rotate(0deg)" },
+    { transform:"translate(-6px,318px) rotate(-4deg)" }
+  ], { duration:560, easing:"cubic-bezier(.55,0,1,.45)", fill:"forwards" });
+  np.style.transformBox = "fill-box"; np.style.transformOrigin = "center";
+  setTimeout(() => { np.setAttribute("transform", "translate(-6 318) rotate(-4 182 15)"); np.getAnimations().forEach(a => a.cancel()); }, 600);
+  // celebración
+  celebrar();
+}
+
+function celebrar(){
+  const hop = (sel, h, d, extra = "") => $(sel).animate([
+    { transform:`${extra} translateY(0) scale(1,1)` },
+    { transform:`${extra} translateY(4px) scale(1.06,.92)`, offset:.15 },
+    { transform:`${extra} translateY(-${h}px) scale(.96,1.05)`, offset:.5 },
+    { transform:`${extra} translateY(0) scale(1.05,.95)`, offset:.85 },
+    { transform:`${extra} translateY(0) scale(1,1)` }
+  ], { duration:d, easing:"ease-out", delay:0 });
+  hop("#chE", 70, 760);
+  setTimeout(() => hop("#chP", 34, 640), 120);
+  setTimeout(() => hop("#chQ", 22, 600), 220);
+  setTimeout(() => hop("#chC", 18, 560, "scaleX(-1)"), 300);
+  const burst = $("#burst");
+  const colors = ["#FAF6F1", "#C3D73A", "#e2543b", "#0D1114", "#FAF6F1"];
+  const ox = 320, oy = 300;
+  for (let i = 0; i < 34; i++) {
+    const s = document.createElement("span");
+    s.textContent = SIGNOS[i % 4];
+    const size = 22 + Math.random()*40;
+    s.style.fontSize = size + "px";
+    s.style.color = colors[i % colors.length];
+    burst.appendChild(s);
+    const ang = (-Math.PI/2) + (Math.random() - .5) * 2.4;
+    const v = 170 + Math.random()*170;
+    const dx = Math.cos(ang) * v, dy = Math.sin(ang) * v;
+    const rot = (Math.random() - .5) * 540;
+    s.animate([
+      { transform:`translate(${ox}px,${oy}px) scale(.2) rotate(0deg)`, opacity:0 },
+      { transform:`translate(${ox + dx*.7}px,${oy + dy*.7}px) scale(1) rotate(${rot*.5}deg)`, opacity:1, offset:.28 },
+      { transform:`translate(${ox + dx}px,${oy + dy}px) scale(1) rotate(${rot*.75}deg)`, opacity:1, offset:.5 },
+      { transform:`translate(${ox + dx*1.25}px,${oy + dy + 320}px) scale(.9) rotate(${rot}deg)`, opacity:0 }
+    ], { duration:1600 + Math.random()*700, delay:Math.random()*120, easing:"cubic-bezier(.2,.6,.4,1)", fill:"forwards" })
+      .onfinish = () => s.remove();
+  }
+}
+
+/* ============ ACTA (solo la persona dueña) ============ */
+let votos = [];
+async function cargarActa(){
+  const rt = await runtime;
+  $("#actaSub").textContent = "Cargando votos…";
+  try {
+    const snap = await rt.db.collection("votos").limit(1000).get();
+    votos = snap.docs.map(d => d.data()).filter(Boolean).sort((a, b) => String(a.fecha).localeCompare(String(b.fecha)));
+  } catch { $("#actaSub").textContent = "No se pudieron leer los votos."; return; }
+  pintarActa();
+}
+const claveVoto = v => v.candidatoId === "otro" ? "otro:" + String(v.otro || "").trim().toLowerCase() : v.candidatoId;
+function pintarActa(){
+  $("#actaSub").textContent = votos.length === 1 ? "1 voto registrado" : `${votos.length} votos registrados`;
+  const cuenta = new Map();
+  votos.forEach(v => { const k = claveVoto(v); const c = cuenta.get(k) || { n:0, label: v.candidatoId === "otro" ? `${v.otro} (no registrado)` : v.candidato }; c.n++; cuenta.set(k, c); });
+  const filas = [...cuenta.entries()].sort((a, b) => b[1].n - a[1].n);
+  const max = Math.max(1, ...filas.map(f => f[1].n));
+  $("#tally").innerHTML = filas.length ? filas.map(([, c]) => `<li><span>${esc(c.label)}</span><span class="bar"><i style="width:${(c.n/max*100).toFixed(1)}%"></i></span><b>${c.n}</b></li>`).join("") : "";
+  const sel = $("#selWinner"), prev = sel.value;
+  sel.innerHTML = `<option value="">Selecciona tras el anuncio</option>` +
+    CANDIDATOS.map(c => `<option value="${c.id}">${esc(nombreCompleto(c))}</option>`).join("") +
+    filas.filter(([k]) => k.startsWith("otro:")).map(([k, c]) => `<option value="${esc(k)}">${esc(c.label)}</option>`).join("");
+  sel.value = prev;
+  pintarTabla();
+}
+function pintarTabla(){
+  const w = $("#selWinner").value;
+  const ganadores = w ? votos.filter(v => claveVoto(v) === w).slice(0, 3) : [];
+  $("#winners").textContent = w ? (ganadores.length ? `Primeras personas en acertar: ${ganadores.map(g => g.nombre).join(", ")}.` : "Nadie votó por esa persona.") : "";
+  const tb = $("#tbody");
+  if (!votos.length) { tb.innerHTML = `<tr><td colspan="6" class="empty">Todavía no hay votos. Comparte la boleta para recibir los primeros.</td></tr>`; return; }
+  const fmt = new Intl.DateTimeFormat("es-MX", { dateStyle:"short", timeStyle:"medium", timeZone:"America/Mexico_City" });
+  tb.innerHTML = votos.map((v, i) => `<tr class="${ganadores.includes(v) ? "win" : ""}"><td>${i + 1}</td><td>${esc(fmt.format(new Date(v.fecha)))}</td><td>${esc(v.nombre)}</td><td>${esc(v.correo)}</td><td>${esc(v.candidatoId === "otro" ? v.otro + " (no registrado)" : v.candidato)}</td><td>${esc(v.folio)}</td></tr>`).join("");
+}
+$("#selWinner").addEventListener("change", pintarTabla);
+$("#btnCerrarActa").addEventListener("click", () => $("#acta").close());
+$("#btnCsv").addEventListener("click", async () => {
+  const rt = await runtime;
+  const q = s => `"${String(s ?? "").replace(/"/g, '""')}"`;
+  const csv = ["orden,fecha,nombre,correo,voto,no_registrado,consentimiento,folio"]
+    .concat(votos.map((v, i) => [i + 1, v.fecha, v.nombre, v.correo, v.candidato, v.otro, v.consentimiento ? "sí" : "no", v.folio].map(q).join(",")))
+    .join("\n");
+  if (rt.downloads) { try { await rt.downloads.save({ filename:"quiniela-nobel-2026.csv", data:"\ufeff" + csv }); } catch {} }
+});
+
+/* ============ FOTOS DE WIKIPEDIA ============ */
+async function fotoDe(id){
+  const t = encodeURIComponent(WIKI[id]);
+  for (const host of ["es", "en"]) {
+    try {
+      const r = await fetch(`https://${host}.wikipedia.org/api/rest_v1/page/summary/${t}`, { headers:{ "Accept":"application/json" } });
+      if (!r.ok) continue;
+      const j = await r.json();
+      const src = j.thumbnail && j.thumbnail.source;
+      if (src) return src.replace(/\/(\d+)px-/, "/400px-");
+    } catch { return null; }   // red bloqueada: se quedan las iniciales
+  }
+  return null;
+}
+async function cargarFotos(){
+  await Promise.all(CANDIDATOS.map(async c => {
+    const src = await fotoDe(c.id);
+    if (!src) return;
+    const img = new Image();
+    img.className = "foto"; img.alt = ""; img.decoding = "async";
+    img.onload = () => {
+      FOTOS[c.id] = src;
+      document.querySelectorAll(`.emblem[data-foto="${c.id}"]`).forEach(em => {
+        if (em.querySelector("img.foto")) return;
+        em.prepend(img.cloneNode());
+        requestAnimationFrame(() => em.classList.add("has-foto"));
+      });
+    };
+    img.src = src;
+  }));
+}
+cargarFotos();
+
+/* ============ ARRANQUE ============ */
+if (Date.now() > Date.parse(CONFIG.CIERRE)) { document.body.classList.add("is-closed"); grid.querySelectorAll("input").forEach(i => i.disabled = true); }
+
+// entrada: los personajes se asoman detrás de la boleta
+if (!reduce) {
+  $("#ballot").animate([{ opacity:0, transform:"translateY(26px) rotate(.6deg)" }, { opacity:1, transform:"none" }], { duration:800, easing:"cubic-bezier(.16,1,.3,1)" });
+  $("#peekQ").animate([{ transform:"translateY(70px)" }, { transform:"translateY(-6px)", offset:.75 }, { transform:"translateY(0)" }], { duration:900, delay:650, easing:"cubic-bezier(.3,1.3,.5,1)", fill:"backwards" });
+  $("#peekC").animate([{ transform:"rotate(-14deg) translate(40px,10px)", opacity:0 }, { transform:"rotate(-14deg) translate(0,0)", opacity:1 }], { duration:700, delay:900, easing:"cubic-bezier(.3,1.3,.5,1)", fill:"backwards" });
+}
+
+(async () => {
+  const prev = await yaVoto();
+  if (prev) { $("#s-boleta").classList.remove("is-active"); $("#s-urna").classList.add("is-active"); mostrarUrna(prev, false); }
+  const rt = await runtime;
+  if (rt.user && rt.db) { try { if (await rt.user.isOwner()) document.body.classList.add("is-owner"); } catch {} }
+  if (!rt.downloads) $("#btnCsv").hidden = true;
+  const abrirSiHash = () => { if (location.hash === "#acta" && document.body.classList.contains("is-owner") && !$("#acta").open) { $("#acta").showModal(); cargarActa(); } };
+  abrirSiHash(); addEventListener("hashchange", abrirSiHash);
+})();
+})();
+</script>
+</body>
+</html>
