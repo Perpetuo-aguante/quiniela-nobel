@@ -533,6 +533,7 @@ const CANDIDATOS = [
   {id:"wright",       n1:"Alexis",   n2:"Wright",       pais:"Australia",      ini:"AW"}
 ];
 const SIGNOS = [".", ",", "!", "?"];
+const SIN_SIGNO = ["murnane", "wright"];
 const WIKI = {
   "aira":"César_Aira", "atwood":"Margaret_Atwood", "can-xue":"Can_Xue", "carson":"Anne_Carson",
   "cartarescu":"Mircea_Cărtărescu", "ghosh":"Amitav_Ghosh", "murakami":"Haruki_Murakami", "murnane":"Gerald_Murnane",
@@ -603,7 +604,8 @@ function emblemHTML(c, idx){
   if (!c) return `<span class="emblem blank"><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"></svg></span>`;
   const long = c.ini.length > 2 ? " long" : "";
   const f = FOTOS[c.id];
-  return `<span class="emblem c${idx % 4}${f ? " has-foto" : ""}" data-foto="${c.id}">${f ? `<img class="foto" alt="" src="${esc(f)}">` : ""}<span class="ini${long}">${c.ini}</span><span class="dot" aria-hidden="true">${SIGNOS[idx % 4]}</span><svg class="mark" viewBox="0 0 100 100" aria-hidden="true"></svg></span>`;
+  const signo = SIN_SIGNO.includes(c.id) ? "" : `<span class="dot" aria-hidden="true">${SIGNOS[idx % 4]}</span>`;
+  return `<span class="emblem c${idx % 4}${f ? " has-foto" : ""}" data-foto="${c.id}">${f ? `<img class="foto" alt="" src="${esc(f)}">` : ""}<span class="ini${long}">${c.ini}</span>${signo}<svg class="mark" viewBox="0 0 100 100" aria-hidden="true"></svg></span>`;
 }
 grid.innerHTML = CANDIDATOS.map((c, i) => `
   <li><label class="cand" data-id="${c.id}">
