@@ -15,7 +15,7 @@ Live at **https://nobel.perpetuo.global** via GitHub Pages.
 3. Vote is POSTed as JSON to an n8n webhook, then the ballot folds and drops into the urn.
 4. One vote per person: localStorage on the client + email dedupe on the server (n8n answers 409 with the existing vote).
 5. Voting closes 2026-10-08 11:00 UTC (5:00 a.m. Mexico City), before the announcement in Stockholm. Server answers 410 after that.
-6. Candidate photos are fetched at runtime from the Wikipedia REST API (`/api/rest_v1/page/summary/<title>`) and shown as brand-color duotones. If a photo can't load, the initials stay.
+6. Candidate photos are Wikimedia Commons thumbnails (the same ones Wikipedia uses), listed in `FOTO_URL` and shown as brand-color duotones. Use a standard thumbnail width (330px); other widths are rejected by Wikimedia. If a photo can't load, the initials stay. Murnane and Wright have no freely licensed photo yet, so they show initials (and no punctuation sign, see `SIN_SIGNO`).
 
 ## Config (top of the `<script>` in index.html)
 ```js
@@ -25,7 +25,7 @@ const CONFIG = {
   CLAVE_LOCAL: "perpetuo-nobel-2026"
 };
 ```
-Candidates live in `CANDIDATOS` (alphabetical by surname) and their Wikipedia titles in `WIKI`.
+Candidates live in `CANDIDATOS` (alphabetical by surname) and their photo URLs in `FOTO_URL`.
 
 ### Payload sent to the webhook
 ```json

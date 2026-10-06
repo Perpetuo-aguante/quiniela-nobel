@@ -534,10 +534,19 @@ const CANDIDATOS = [
 ];
 const SIGNOS = [".", ",", "!", "?"];
 const SIN_SIGNO = ["murnane", "wright"];
-const WIKI = {
-  "aira":"César_Aira", "atwood":"Margaret_Atwood", "can-xue":"Can_Xue", "carson":"Anne_Carson",
-  "cartarescu":"Mircea_Cărtărescu", "ghosh":"Amitav_Ghosh", "murakami":"Haruki_Murakami", "murnane":"Gerald_Murnane",
-  "pynchon":"Thomas_Pynchon", "rivera-garza":"Cristina_Rivera_Garza", "rushdie":"Salman_Rushdie", "wright":"Alexis_Wright"
+// Miniaturas de Wikimedia Commons (las mismas que usa Wikipedia). Murnane y Wright no tienen foto libre.
+const WM = "https://thumb.wikimedia.org/wikipedia/commons/thumb/";
+const FOTO_URL = {
+  "aira":"https://upload.wikimedia.org/wikipedia/commons/9/9e/Cesar_Aira_Wikipedia.jpg",
+  "atwood":WM + "a/a0/Margaret_Atwood_%2852161564186%29_%28cropped%29.jpg/330px-Margaret_Atwood_%2852161564186%29_%28cropped%29.jpg",
+  "can-xue":"https://upload.wikimedia.org/wikipedia/commons/e/e6/%E6%AE%8B%E9%9B%AA1.jpg",
+  "carson":WM + "6/68/Anne_Carson%2C_poet%2C_at_the_2024_National_Book_Awards_finalist_reading_0_%28cropped%29.jpg/330px-Anne_Carson%2C_poet%2C_at_the_2024_National_Book_Awards_finalist_reading_0_%28cropped%29.jpg",
+  "cartarescu":WM + "6/69/Mircea_Cartarescu_-_Zsolnay-Lesefest.JPG/330px-Mircea_Cartarescu_-_Zsolnay-Lesefest.JPG",
+  "ghosh":WM + "1/14/Amitav_Ghosh_by_David_Shankbone.jpg/330px-Amitav_Ghosh_by_David_Shankbone.jpg",
+  "murakami":WM + "5/51/Conversatorio_Haruki_Murakami_%2812_de_12%29_%2845747009452%29_%28cropped%29.jpg/330px-Conversatorio_Haruki_Murakami_%2812_de_12%29_%2845747009452%29_%28cropped%29.jpg",
+  "pynchon":WM + "c/ca/Thomas_Pynchon%2C_high_school_yearbook_editor%2C_1953.jpg/330px-Thomas_Pynchon%2C_high_school_yearbook_editor%2C_1953.jpg",
+  "rivera-garza":WM + "1/12/Cristina_Rivera_Garza%2C_ciudad_de_M%C3%A9xico%2C_2025.jpg/330px-Cristina_Rivera_Garza%2C_ciudad_de_M%C3%A9xico%2C_2025.jpg",
+  "rushdie":WM + "9/92/Salman_Rushdie_2014_%28cropped%29.jpg/330px-Salman_Rushdie_2014_%28cropped%29.jpg"
 };
 const FOTOS = {};
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -939,28 +948,17 @@ $("#btnCsv").addEventListener("click", async () => {
   if (rt.downloads) { try { await rt.downloads.save({ filename:"quiniela-nobel-2026.csv", data:"\ufeff" + csv }); } catch {} }
 });
 
-/* ============ FOTOS DE WIKIPEDIA ============ */
-async function fotoDe(id){
-  const t = encodeURIComponent(WIKI[id]);
-  for (const host of ["es", "en"]) {
-    try {
-      const r = await fetch(`https://${host}.wikipedia.org/api/rest_v1/page/summary/${t}`, { headers:{ "Accept":"application/json" } });
-      if (!r.ok) continue;
-      const j = await r.json();
-      const src = j.thumbnail && j.thumbnail.source;
-      if (src) return src;
-    } catch { return null; }   // red bloqueada: se quedan las iniciales
-  }
-  return null;
-}
-async function cargarFotos(){
-  await Promise.all(CANDIDATOS.map(async c => {
-    const src = await fotoDe(c.id);
-    if (!src) return;
+/* ============ FOTOS (Wikimedia Commons) ============ */
+function cargarFotos(){
+  CANDIDATOS.forEach(c => {
+    const src = FOTO_URL[c.id];
+    if (!src) return;   // sin foto: se quedan las iniciales
     const img = new Image();
     img.className = "foto"; img.alt = ""; img.decoding = "async";
+    let intentos = 0;
+    img.onerror = () => { if (++intentos < 2) setTimeout(() => { img.src = src + (src.includes("?") ? "&" : "?") + "r=1"; }, 1500); };
     img.onload = () => {
-      FOTOS[c.id] = src;
+      FOTOS[c.id] = img.src;
       document.querySelectorAll(`.emblem[data-foto="${c.id}"]`).forEach(em => {
         if (em.querySelector("img.foto")) return;
         em.prepend(img.cloneNode());
@@ -968,7 +966,7 @@ async function cargarFotos(){
       });
     };
     img.src = src;
-  }));
+  });
 }
 cargarFotos();
 
